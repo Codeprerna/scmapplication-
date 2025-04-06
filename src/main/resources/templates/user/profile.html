@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-th-replace="~{base :: parent(~{::#content},~{::title},~{::script})}">
+<head>
+    <title data-th-text="${loggedInUser.name}+' | SCM'">Profile Page</title>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
+    <div id="content">
+        <!-- Sidebar -->
+        <div data-th-if="${loggedInUser}">
+            <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="sm:pl-64 pt-20 min-h-screen">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <!-- Welcome Card -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-6 mb-8 transition-colors duration-200">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <!-- Profile Picture -->
+                        <div class="w-32 h-32 mb-4 md:mb-0 md:mr-6 rounded-full overflow-hidden border-4 border-blue-100 dark:border-blue-900">
+                            <!-- Profile Picture (with fallback to initials on error) -->
+                            <img data-th-if="${loggedInUser.profilePic}"
+                                 data-th-src="${loggedInUser.profilePic}"
+                                 alt="Profile"
+                                 class="w-full h-full object-cover"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                            <!-- Initials Fallback (hidden by default if profilePic exists) -->
+                            <div data-th-unless="${loggedInUser.profilePic}"
+                                 data-th-classappend="${loggedInUser.profilePic} ? 'hidden' : 'flex'"
+                                 class="w-full h-full bg-blue-500 dark:bg-blue-600 items-center justify-center text-white text-4xl font-bold"
+                                 data-th-text="${#strings.substring(loggedInUser.name,0,1)}">
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Info -->
+                        <div class="text-center md:text-left ml-0 md:ml-6 pl-10">
+                            <h1 class="text-3xl font-bold text-gray-800 dark:text-white" 
+                                data-th-text="'Hello, ' + ${loggedInUser.name}">Hello, User</h1>
+                            <p class="text-blue-600 dark:text-blue-400 mb-2" 
+                               data-th-text="${loggedInUser.email}">user@example.com</p>
+                            <p class="text-gray-500 dark:text-gray-400 max-w-md" 
+                               data-th-text="${loggedInUser.about}">
+                                This is your profile description. You can edit it to tell others more about yourself.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Total Contacts Card -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-t-4 border-red-600 dark:border-red-500 transition-colors duration-200">
+                        <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Contacts</h3>
+                        <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">
+                            <span data-th-text="${contactCount}">0</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Member Status Card -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-t-4 border-purple-600 dark:border-purple-500 transition-colors duration-200">
+                        <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Member Status</h3>
+                        <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">Active</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+               <!-- Quick Actions Section with Working Dark Mode -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8 transition-colors duration-200">
+    <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Add Contact -->
+            <a data-th-href="@{'/user/contacts/add'}" 
+               class="p-4 bg-blue-50 dark:bg-gray-700 rounded-lg text-center hover:bg-blue-100 dark:hover:bg-gray-600 transition-colors duration-200">
+                <div class="text-blue-600 dark:text-blue-400 mb-2">
+                    <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Add Contact</span>
+            </a>
+            
+            <!-- View Contacts -->
+            <a href="#" 
+               class="p-4 bg-green-50 dark:bg-gray-700 rounded-lg text-center hover:bg-green-100 dark:hover:bg-gray-600 transition-colors duration-200">
+                <div class="text-green-600 dark:text-green-400 mb-2">
+                    <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">View Contacts</span>
+            </a>
+            
+            
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log("Profile page loaded");
+        // Add dark mode toggle functionality here if needed
+    </script>
+</body>
+</html>
