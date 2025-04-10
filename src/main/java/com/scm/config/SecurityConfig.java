@@ -32,10 +32,10 @@ public class SecurityConfig {
 
     @Autowired
     private OAuthAuthenticationSuccessHandler handler;
-   
+
     // Configuration of authentication provider for spring security
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    DaoAuthenticationProvider authenticationProvider(){
      DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
      //user details service object
     daoAuthenticationProvider.setUserDetailsService(userDetailService);
@@ -43,10 +43,13 @@ public class SecurityConfig {
     daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
      return daoAuthenticationProvider;
     }
-    
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity HttpSecurity) throws Exception{
+    SecurityFilterChain securityFilterChain(HttpSecurity HttpSecurity) throws Exception{
         // configuration
+        HttpSecurity.requiresChannel(channel ->
+        channel.anyRequest().requiresSecure()
+    );
 
         //urls configuration
         HttpSecurity.authorizeHttpRequests(authorize->{
@@ -101,8 +104,9 @@ public class SecurityConfig {
        
         return HttpSecurity.build();
     }
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 }

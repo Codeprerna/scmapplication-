@@ -11,10 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import com.scm.config.OAuthAuthenticationSuccessHandler;
 import com.scm.entities.Contact;
 import com.scm.entities.User;
@@ -30,7 +27,6 @@ import com.scm.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -63,7 +59,7 @@ public class ContactController {
         model.addAttribute("contactForm", contactForm);        
         return "user/add_contact";
     }
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @PostMapping("/add")
     public String saveContact(@Valid @ModelAttribute ContactForm contactForm,BindingResult rBindingResult, Authentication authentication,HttpSession session){
         // process the form data
         String username = Helper.getEmailOfLoggedInUser(authentication);
@@ -106,7 +102,7 @@ public class ContactController {
 
     //view contacts
     @RequestMapping
-    public String viewContacts(@RequestParam(value="page",defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = AppConstants.PAGE_SIZE + "") int size, @RequestParam(value = "sortBy", defaultValue = "name") String sortBy, @RequestParam(value="direction", defaultValue = "asc") String direction, Model model,Authentication authentication){
+    public String viewContacts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = AppConstants.PAGE_SIZE + "") int size, @RequestParam(defaultValue = "name") String sortBy, @RequestParam(defaultValue = "asc") String direction, Model model,Authentication authentication){
 
         //load all the user contacts
         String username = Helper.getEmailOfLoggedInUser(authentication);
@@ -124,9 +120,9 @@ public class ContactController {
 
     //search handler
     @RequestMapping("/search")
-    public String searchHandler( @ModelAttribute ContactSearchForm contactSearchForm,@RequestParam(value="size", defaultValue = AppConstants.PAGE_SIZE + "") int size, 
-    @RequestParam(value="page",defaultValue = "0")int page, @RequestParam(value="sortBy", defaultValue = "name")String sortBy,
-    @RequestParam(value="direction",defaultValue = "asc")String direction, 
+    public String searchHandler( @ModelAttribute ContactSearchForm contactSearchForm,@RequestParam(defaultValue = AppConstants.PAGE_SIZE + "") int size, 
+    @RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "name")String sortBy,
+    @RequestParam(defaultValue = "asc")String direction, 
     Model model, Authentication authentication){
 
         logger.info("field {} keyword {}",contactSearchForm.getField(),contactSearchForm.getValue());
@@ -157,7 +153,7 @@ public class ContactController {
     
         // delete contact
         @RequestMapping("/delete/{contactId}")
-        public String deleteContact(@PathVariable("contactId") String contactId,
+        public String deleteContact(@PathVariable String contactId,
         HttpSession session ){
 
             contactService.delete(contactId);
@@ -175,7 +171,7 @@ public class ContactController {
         //update contact form view
         @GetMapping("/view/{contactId}")
         public String updataContactFormView(
-            @PathVariable("contactId") String contactId, Model model, Authentication authentication) {
+            @PathVariable String contactId, Model model, Authentication authentication) {
                var contact =  contactService.getById(contactId);
 
                ContactForm contactForm = new ContactForm();
@@ -194,8 +190,8 @@ public class ContactController {
             
             }
 
-            @RequestMapping(value = "/update/{contactId}",method = RequestMethod.POST)
-            public String updateContact(@PathVariable("contactId") String contactId,@Valid @ModelAttribute ContactForm contactForm,BindingResult bindingResult, Model model){
+            @PostMapping("/update/{contactId}")
+            public String updateContact(@PathVariable String contactId,@Valid @ModelAttribute ContactForm contactForm,BindingResult bindingResult, Model model){
 
                 // update the contact
                 if(bindingResult.hasErrors()){

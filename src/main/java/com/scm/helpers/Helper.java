@@ -7,9 +7,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class Helper {
     public static String getEmailOfLoggedInUser(Authentication authentication){
      
-        if(authentication instanceof OAuth2AuthenticationToken){
-
-            var aOAuth2AuthenticationToken = (OAuth2AuthenticationToken)authentication;
+        if(authentication instanceof OAuth2AuthenticationToken aOAuth2AuthenticationToken){
             var clientId = aOAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
 
             var oauth2User = (OAuth2User)authentication.getPrincipal();

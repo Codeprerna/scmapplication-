@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,9 +16,6 @@ import com.scm.services.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestMethod;
-
 
 
 @Controller
@@ -74,7 +72,7 @@ public class PageController {
      
     
     //processing register
-    @RequestMapping(value="/do-register", method=RequestMethod.POST)
+    @PostMapping("/do-register")
     public String processRegister( @Valid @ModelAttribute UserForm userForm,BindingResult rBindingResult, HttpSession session){ // this attribute will automatically create object and assign values into it
         System.out.println("Processing Registration");
         System.out.println(userForm);
